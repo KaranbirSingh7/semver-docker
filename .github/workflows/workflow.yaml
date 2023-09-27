@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # we need complete history for svu utility
 
       - name: Install svu
         run: |
