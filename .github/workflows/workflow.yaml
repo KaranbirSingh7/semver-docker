@@ -17,12 +17,8 @@ jobs:
         run: |
           echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
           sudo apt update
-          sudo apt install svu
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v1
-      #   with:
-      #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
-      #     password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          sudo apt install svu -yqq
+
       - name: Set Version with svu
         run: |
           git tag $(svu next)
