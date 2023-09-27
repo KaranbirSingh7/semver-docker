@@ -1,0 +1,36 @@
+name: Build and Push Docker Image
+on:
+  pull_request: # trigger on all pull requests
+  push:
+    branches:
+      - main # Change this to the branch you want to trigger the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # we need complete history for svu utility
+
+      - name: Install svu
+        run: |
+          echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
+          sudo apt update
+          sudo apt install svu -yqq
+
+      - name: Set Version with svu
+        run: |
+          git tag $(svu next)
+          git push --tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker Image
+        run: |
+          IMAGE_TAG="myapp"
+          IMAGE_VERSION="$(svu next)"
+          docker build -t $IMAGE_TAG:$IMAGE_VERSION .
+        working-directory: .

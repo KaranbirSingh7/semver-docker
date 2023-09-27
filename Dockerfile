@@ -11,7 +11,7 @@ COPY . .
 RUN go build -o app
 
 # Expose a port (if your application listens on a specific port)
-# EXPOSE 8080
+EXPOSE 8080
 
 # Command to run the executable
 CMD ["./app"]
