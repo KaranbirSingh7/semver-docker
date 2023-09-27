@@ -52,4 +52,10 @@ jobs:
             DOCKER_IMAGE_TAG=$(svu next)
           fi
           docker build -t $IMAGE_TAG:$DOCKER_IMAGE_TAG .
+
+      - name: Build Docker Image
+        run: |
+          IMAGE_TAG="myapp"
+          IMAGE_VERSION="$(svu next)"
+          docker build -t $IMAGE_TAG:$IMAGE_VERSION .
         working-directory: .
