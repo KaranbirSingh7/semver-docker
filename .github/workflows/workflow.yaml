@@ -15,8 +15,9 @@ jobs:
 
       - name: Install svu
         run: |
-          go get -u github.com/caarlos0/svu
-          export PATH=$PATH:$(go env GOPATH)/bin
+          echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
+          sudo apt update
+          sudo apt install svu
       # - name: Login to Docker Hub
       #   uses: docker/login-action@v1
       #   with:
