@@ -1,5 +1,5 @@
 # semver-docker
-auto release docker images semver based on commit history
+auto tag docker images semver based on commit history using svu
 
 
 ### Pre-Requisties
