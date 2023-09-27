@@ -10,6 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Variable
+        id: set-variable
+        run: |
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            PR_BRANCH=${{ github.event.pull_request.head.ref }}
+            echo "PR_BRANCH=$PR_BRANCH" >> $GITHUB_ENV
+          else
+            BRANCH=${{ github.ref }}
+            echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          fi
+        shell: bash
+
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -22,15 +34,22 @@ jobs:
           sudo apt install svu -yqq
 
       - name: Set Version with svu
+        if: steps.check-branch.outputs.is_main_branch == 'true'
         run: |
           git tag $(svu next)
           git push --tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+          # IMAGE_VERSION="$(svu next)"
       - name: Build Docker Image
         run: |
-          IMAGE_TAG="myapp"
-          IMAGE_VERSION="$(svu next)"
-          docker build -t $IMAGE_TAG:$IMAGE_VERSION .
+          DOCKER_IMAGE="myapp"
+          DOCKER_IMAGE_TAG=""
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            DOCKER_IMAGE_TAG=$(echo ${{ github.sha }} | cut -c1-7)
+          else
+            DOCKER_IMAGE_TAG=$(svu next)
+          fi
+          docker build -t $IMAGE_TAG:$DOCKER_IMAGE_TAG .
         working-directory: .
