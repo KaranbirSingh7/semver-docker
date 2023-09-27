@@ -1,7 +1,7 @@
 name: Build and Push Docker Image
 on:
+  pull_request: # trigger on all pull requests
   push:
-    pull_request: # trigger on all pull requests
     branches:
       - main # Change this to the branch you want to trigger the workflow
 
