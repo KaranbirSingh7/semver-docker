@@ -34,7 +34,7 @@ jobs:
           sudo apt install svu -yqq
 
       - name: Set Version with svu
-        if: steps.check-branch.outputs.is_main_branch == 'true'
+        if: github.ref == 'refs/heads/main'
         run: |
           git tag $(svu next)
           git push --tags
