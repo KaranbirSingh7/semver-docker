@@ -27,6 +27,6 @@ jobs:
       - name: Build Docker Image
         run: |
           IMAGE_TAG="myapp"
-          IMAGE_VERSION="$(svu current)"
+          IMAGE_VERSION="$(svu next)"
           docker build -t $IMAGE_TAG:$IMAGE_VERSION .
         working-directory: .
